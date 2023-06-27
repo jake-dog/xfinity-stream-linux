@@ -1,0 +1,43 @@
+diff --git a/src/patchelf.cc b/src/patchelf.cc
+index 82b4b46..aa191e4 100644
+--- a/src/patchelf.cc
++++ b/src/patchelf.cc
+@@ -1881,19 +1881,24 @@ void ElfFile<ElfFileParamNames>::addNeeded(const std::set<std::string> & libs)
+         pos += i.size() + 1;
+     }
+ 
+-    /* add all new needed entries to the dynamic section */
++    // Try "Elf_Vernaux" but def "Elf_Verneed"
++    auto shdrVersionR = findSectionHeader(".gnu.version_r");
++    replaceSection(".gnu.version_r",
++        rdi(shdrVersionR.sh_size) + sizeof(Elf_Vernaux));
++
++    /* add all new needed entries to the dynamic section
+     std::string & newDynamic = replaceSection(".dynamic",
+         rdi(shdrDynamic.sh_size) + sizeof(Elf_Dyn) * libs.size());
+ 
+     unsigned int idx = 0;
+     for ( ; rdi(reinterpret_cast<const Elf_Dyn *>(newDynamic.c_str())[idx].d_tag) != DT_NULL; idx++) ;
+-    debug("DT_NULL index is %d\n", idx);
++    debug("DT_NULL index is %d\n", idx);*/
+ 
+-    /* Shift all entries down by the number of new entries. */
++    /* Shift all entries down by the number of new entries.
+     setSubstr(newDynamic, sizeof(Elf_Dyn) * libs.size(),
+-        std::string(newDynamic, 0, sizeof(Elf_Dyn) * (idx + 1)));
++        std::string(newDynamic, 0, sizeof(Elf_Dyn) * (idx + 1)));*/
+ 
+-    /* Add the DT_NEEDED entries at the top. */
++    /* Add the DT_NEEDED entries at the top.
+     unsigned int i = 0;
+     for (auto & j : libStrings) {
+         Elf_Dyn newDyn;
+@@ -1901,7 +1906,7 @@ void ElfFile<ElfFileParamNames>::addNeeded(const std::set<std::string> & libs)
+         wri(newDyn.d_un.d_val, j);
+         setSubstr(newDynamic, i * sizeof(Elf_Dyn), std::string((char *) &newDyn, sizeof(Elf_Dyn)));
+         i++;
+-    }
++    }*/
+ 
+     changed = true;
+ 

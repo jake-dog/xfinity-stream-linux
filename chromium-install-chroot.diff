@@ -1,0 +1,25 @@
+--- install-chroot.sh
++++ install-chroot.sh
+@@ -151,7 +151,7 @@
+ # And as this script only needs the packages once, there is no good reason to
+ # introduce a hard dependency on things such as dchroot and debootstrap.
+ dep=
+-for i in dchroot debootstrap libwww-perl; do
++for i in debootstrap libwww-perl; do
+   [ -d /usr/share/doc/"$i" ] || dep="$dep $i"
+ done
+ [ -n "$dep" ] && sudo apt-get -y install $dep
+@@ -673,9 +673,10 @@
+   echo '"'$(id -nu) ALL=(ALL) ALL'"' >>/etc/sudoers'
+ 
+ # Install a few more commonly used packages
+-sudo "/usr/local/bin/${target%bit}" apt-get -y install                         \
+-  autoconf automake1.9 dpkg-dev g++-multilib gcc-multilib gdb less libtool     \
+-  lsof strace
++#sudo "/usr/local/bin/${target%bit}" apt-get -y install                         \
++#  autoconf automake dpkg-dev g++-multilib gcc-multilib gdb less libtool     \
++#  lsof strace
++sudo "/usr/local/bin/${target%bit}" apt-get -y install chromium
+ 
+ # If running a 32bit environment on a 64bit machine, install a few binaries
+ # as 64bit. This is only done automatically if the chroot distro is the same as
