@@ -100,7 +100,7 @@ In all cases the user must also change the user agent to a Windows/Mac agent str
 ```shell
 cp libwidevinecdm.so.patched ~/
 wget https://dl.google.com/widevine-cdm/4.10.2557.0-linux-x64.zip
-unzip -x libwidevinecdm.so ~/
+unzip 4.10.2557.0-linux-x64.zip -x libwidevinecdm.so -d ~/
 chmod +r ~/{LICENSE,manifest.json}
 sudo bookworm64 mkdir -p /usr/lib/chromium/WidevineCdm/_platform_specific/linux_x64/
 sudo bookworm64 cp /home/$(whoami)/libwidevinecdm.so.patched /usr/lib/chromium/WidevineCdm/_platform_specific/linux_x64/libwidevinecdm.so
