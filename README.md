@@ -11,10 +11,10 @@ The technique and modified Widevine CDM have been tested in:
 
 # How it works
 
-1. Obtain a ChromeOS version of Widevine CDM
-2. Patch `GLIBC_ABI_DT_RELR` into Widevine CDM
-3. Create a chroot to run glibc 2.36+ Chromium (for systems on glibc <2.36)
-4. Replace browser's Widevine CDM with patched version
+1. [Obtain a ChromeOS version of Widevine CDM](#1-obtain-a-chromeos-version-of-widevine-cdm)
+2. [Patch `GLIBC_ABI_DT_RELR` into Widevine CDM](#2-patch-glibc_abi_dt_relr-into-widevine-cdm)
+3. [Create a chroot to run glibc 2.36+ Chromium (for systems on glibc <2.36)](#3-create-a-chroot-for-chromium)
+4. [Replace browser's Widevine CDM with patched version](#4-swapping-in-patched-widevine-cdm)
 
 # (1) Obtain a ChromeOS version of Widevine CDM
 
@@ -72,6 +72,7 @@ The following will download, patch, and then run the chromium chroot tool.  When
 ```shell
 wget https://raw.githubusercontent.com/chromium/chromium/bba9a08e0e2b1df323d2b290d5afa281fba37374/build/install-chroot.sh
 patch < chromium-install-chroot.diff
+chmod +x install-chroot.sh
 ./install-chroot.sh
 ```
 
@@ -101,10 +102,10 @@ In all cases the user must also change the user agent to a Windows/Mac agent str
 cp libwidevinecdm.so.patched ~/
 wget https://dl.google.com/widevine-cdm/4.10.2557.0-linux-x64.zip
 unzip 4.10.2557.0-linux-x64.zip -x libwidevinecdm.so -d ~/
-chmod +r ~/{LICENSE,manifest.json}
+chmod +r ~/{LICENSE.txt,manifest.json}
 sudo bookworm64 mkdir -p /usr/lib/chromium/WidevineCdm/_platform_specific/linux_x64/
 sudo bookworm64 cp /home/$(whoami)/libwidevinecdm.so.patched /usr/lib/chromium/WidevineCdm/_platform_specific/linux_x64/libwidevinecdm.so
-sudo bookworm64 cp /home/$(whoami)/{LICENSE,manifest.json} /usr/lib/chromium/WidevineCdm/
+sudo bookworm64 cp /home/$(whoami)/{LICENSE.txt,manifest.json} /usr/lib/chromium/WidevineCdm/
 ```
 
 **NOTE:** Any file matching the following also needs to be replaced: `~/.config/chromium/WidevineCdm/*/_platform_specific/linux_x64/libwidevinecdm.so`
